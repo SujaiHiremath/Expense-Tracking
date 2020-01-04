@@ -107,6 +107,7 @@ class Account(object):
             print(bank[max(bank.keys())])
             del bank[max(bank.keys())]
 
+#Example Code
 if __name__ == '__main__':
     my_account = Account('stuff.CSV')
     my_account.Summary('11/29/2019','12/30/2019')
