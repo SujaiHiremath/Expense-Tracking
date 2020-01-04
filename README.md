@@ -1,29 +1,3 @@
 # Expense-Tracking
 
-Expense-Tracking is a python library that helps to manage bank statement expenses.
-
-## Installation
-
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
-
-```bash
-pip install foobar
-```
-
-## Usage
-
-```python
-import foobar
-
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
-```
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+Expense-Tracking is a python library that helps to manage bank statement expenses. I've had a lot of fun with this so far and welcome suggestions for improvements! Please email shiremat@caltech.edu if you have a recommendation for me! Thanks!
