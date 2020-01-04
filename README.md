@@ -1,6 +1,6 @@
-# Expense Tracker
+# Expense-Tracking
 
-Foobar is a Python library for dealing with word pluralization.
+Expense-Tracking is a python library that helps to manage bank statement expenses.
 
 ## Installation
 
