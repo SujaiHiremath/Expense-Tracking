@@ -1,99 +1,100 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 
+class Account(object):
+    def __init__(self, transactions):
+        df = pd.read_csv(transactions)
+        self.dates = list(df['Posting Date'])
+        self.descriptions = list(df['Description'])
+        self.costs = list(df['Amount'])
+
+    def Pie_Chart(self, end, start):
+        sizes = self.Summary_Partial(end, start)
+        colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#2E2B5F', '#8B00FF' ]
+        explode = (.05, .05, .05, .05, .05, .05, .05)
+        labels = ['Transportation', 'Food', 'Misc', 'Gas', 'Venmo', 'Amazon', 'Grocery']
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, colors=colors, labels=labels, autopct='%1.1f%%', startangle=90, shadow=True, explode=explode)
+        ax1.axis('equal')
+        plt.title('Expenses')
+        #draw circle
+        centre_circle = plt.Circle((0,0),0.70,fc='white')
+        fig = plt.gcf()
+        fig.gca().add_artist(centre_circle)
+    # Equal aspect ratio ensures that pie is drawn as a circle
+        plt.tight_layout()
+        plt.show()
+        plt.show()
+
+    def Summary_Partial(self, end, start):
+        ending_index = self.dates.index(end)
+        starting_index = self.dates.index(start)
+        food = 0
+        transportation = 0
+        misc = 0
+        venmo = 0
+        amazon = 0
+        grocery = 0
+        gas = 0
+
+        food_list = ['CHIPOTLE', 'SUBWAY', 'TACO BELL', 'GENGHIS GRILL', 'SPIRAL',
+         'THAI', 'SMOOTHIE', 'BLUE', 'ZANKOU', 'AFTERS', 'VEGGIE', 'VEGAN',
+         'BOBA', 'RAMEN', 'PIE']
+        grocery_list = ['WAL-MART', 'TARGET', 'WHOLEFDS', 'WALGREENS', 'KROGER']
+        for index in range(starting_index, ending_index):
+            counter = 0
+            for restaurant in food_list:
+                    if restaurant in self.descriptions[index]:
+                        food += -1 * self.costs[index]
+                        counter = 1
+                        break
+            if counter == 1:
+                continue
+            counter1 = 0
+            for store in grocery_list:
+                    if store in self.descriptions[index]:
+                        grocery += -1 * self.costs[index]
+                        counter1 = 1
+                        break
+            if counter1 == 1:
+                continue
+            if self.costs[index] > 0:
+                continue
+            elif 'CHK' in self.descriptions[index]:
+                continue
+            elif 'UBER' in self.descriptions[index] or 'FLIX' in self.descriptions[index]:
+                transportation += -1*self.costs[index]
+                continue
+            elif 'VENMO' in self.descriptions[index]:
+                venmo += -1*self.costs[index]
+                continue
+            elif '7-ELEVEN' in self.descriptions[index] or 'RACE' in self.descriptions[index]:
+                gas += -1*self.costs[index]
+                continue
+            elif 'Amzn' in self.descriptions[index]:
+                amazon += -1*self.costs[index]
+                continue
+            else:
+                misc += -1*self.costs[index]
+
+        sizes = [transportation, food, misc, gas, venmo, amazon, grocery,]
+        return sizes
+
+    def Summary(self, end, start):
+        sizes = self.Summary_Partial(end, start)
+        bank = {sizes[0] : f'    Transportation: ${round(sizes[0], 2)}',
+        sizes[1] : f'    Food: ${round(sizes[1], 2)}',
+        sizes[2] : f'    Misc: ${round(sizes[2], 2)}',
+        sizes[5] : f'    Venmo: ${round(sizes[5], 2)}', sizes[4] : f'    Amazon: ${round(sizes[4], 2)}',
+        sizes[6] : f'    Grocery: ${round(sizes[6], 2)}', sizes[3] : f'    Gas: ${round(sizes[3], 2)}'}
+
+        print(f'Total Expenditure: ${round(sum(sizes), 2)}')
+        for _ in range(len(bank.keys())):
+            print(bank[max(bank.keys())])
+            del bank[max(bank.keys())]
 
 
-def rangeOfItems(end, start):
-    '''This program will calculate expenses between two indices of
-    items bought that show up on the excel spreadsheet.'''
+my_account = Account('stuff.CSV')
+my_account.Summary('11/29/2019','12/30/2019')
+my_account.Pie_Chart('11/29/2019','12/30/2019')
 
-    df = pd.read_csv("stuff.CSV")
-    dates = list(df['Posting Date'])
-    ending_index = dates.index(end)
-    starting_index = dates.index(start)
-    descriptions = list(df['Description'])
-    costs = list(df['Amount'])
-
-    food = 0
-    transportation = 0
-    misc = 0
-    venmo = 0
-    amazon = 0
-    grocery = 0
-    gas = 0
-
-    food_list = ['CHIPOTLE', 'SUBWAY', 'TACO BELL', 'GENGHIS GRILL', 'SPIRAL',
-     'THAI', 'SMOOTHIE', 'BLUE', 'ZANKOU', 'AFTERS', 'VEGGIE', 'VEGAN',
-     'BOBA', 'RAMEN', 'PIE']
-    grocery_list = ['WAL-MART', 'TARGET', 'WHOLEFDS', 'WALGREENS', 'KROGER']
-    for index in range(starting_index, ending_index):
-        counter = 0
-        for restaurant in food_list:
-                if restaurant in descriptions[index]:
-                    food += -1 * costs[index]
-                    counter = 1
-                    break
-        if counter == 1:
-            continue
-        counter1 = 0
-        for store in grocery_list:
-                if store in descriptions[index]:
-                    grocery += -1 * costs[index]
-                    counter1 = 1
-                    break
-        if counter1 == 1:
-            continue
-        if costs[index] > 0:
-            continue
-        elif 'CHK' in descriptions[index]:
-            continue
-        elif 'UBER' in descriptions[index] or 'FLIX' in descriptions[index]:
-            transportation += -1*costs[index]
-            continue
-        elif 'VENMO' in descriptions[index]:
-            venmo += -1*costs[index]
-            continue
-        elif '7-ELEVEN' in descriptions[index] or 'RACE' in descriptions[index]:
-            gas += -1*costs[index]
-            continue
-        elif 'Amzn' in descriptions[index]:
-            amazon += -1*costs[index]
-            continue
-        else:
-            misc += -1*costs[index]
-
-    colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#2E2B5F', '#8B00FF' ]
-    explode = (.05, .05, .05, .05, .05, .05, .05)
-    sizes = [transportation, food, misc, gas, venmo, amazon, grocery,]
-    labels = ['Transportation', 'Food', 'Misc', 'Gas', 'Venmo', 'Amazon', 'Grocery']
-    fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, colors=colors, labels=labels, autopct='%1.1f%%', startangle=90, shadow=True, explode=explode)
-    ax1.axis('equal')
-    plt.title('Expenses')
-    #draw circle
-    centre_circle = plt.Circle((0,0),0.70,fc='white')
-    fig = plt.gcf()
-    fig.gca().add_artist(centre_circle)
-# Equal aspect ratio ensures that pie is drawn as a circle
-    plt.tight_layout()
-    plt.show()
-    plt.show()
-
-
-    bank = {transportation : f'    Transportation: ${round(transportation, 2)}',
-    food : f'    Food: ${round(food, 2)}',
-    misc : f'    Misc: ${round(misc, 2)}',
-    transportation : f'    Transportation: ${round(transportation, 2)}',
-    venmo : f'    Venmo: ${round(venmo, 2)}', amazon : f'    Amazon: ${round(amazon, 2)}',
-    grocery : f'    Grocery: ${round(grocery, 2)}', gas : f'    Gas: ${round(gas, 2)}'}
-
-
-#Printing out the amounts in an ordered manner
-    print(f'Total Expenditure: ${round(sum(sizes), 2)}')
-    for _ in range(len(bank.keys())):
-        print(bank[max(bank.keys())])
-        del bank[max(bank.keys())]
-
-#Running the Expense Tracker
-rangeOfItems('11/29/2019','12/30/2019')
