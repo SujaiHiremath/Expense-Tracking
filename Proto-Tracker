@@ -2,13 +2,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class Account(object):
+    '''The Account object will hold a dataframe of an individuals bank transactions.
+    The methods of the Account object deal with categorizing and displaying the transaction amounts.'''
     def __init__(self, transactions):
+        '''This method will initalize an Account object.
+        Input: CSV file of bank transactions'''
         df = pd.read_csv(transactions)
         self.dates = list(df['Posting Date'])
         self.descriptions = list(df['Description'])
         self.costs = list(df['Amount'])
 
     def Pie_Chart(self, end, start):
+        '''This method will produce a pie chart of expenses cateogized into
+        'Transportation', 'Food', 'Misc', 'Gas', 'Venmo', 'Amazon', 'Grocery'.
+        Input: start date, end date for transactions
+        Return: none'''
+
         sizes = self.Summary_Partial(end, start)
         colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#2E2B5F', '#8B00FF' ]
         explode = (.05, .05, .05, .05, .05, .05, .05)
@@ -21,12 +30,16 @@ class Account(object):
         centre_circle = plt.Circle((0,0),0.70,fc='white')
         fig = plt.gcf()
         fig.gca().add_artist(centre_circle)
-    # Equal aspect ratio ensures that pie is drawn as a circle
+        # Equal aspect ratio ensures that pie is drawn as a circle
         plt.tight_layout()
         plt.show()
         plt.show()
 
     def Summary_Partial(self, end, start):
+        '''This function will produce a list of the categorized expense values for use
+        in other programs.
+        Input: start date, end date
+        Return: list of categoery expense values'''
         ending_index = self.dates.index(end)
         starting_index = self.dates.index(start)
         food = 0
@@ -76,11 +89,12 @@ class Account(object):
                 continue
             else:
                 misc += -1*self.costs[index]
-
         sizes = [transportation, food, misc, gas, venmo, amazon, grocery,]
         return sizes
 
     def Summary(self, end, start):
+        '''This function will return a written summary of categorized expenses.
+        Input: start date, end date'''
         sizes = self.Summary_Partial(end, start)
         bank = {sizes[0] : f'    Transportation: ${round(sizes[0], 2)}',
         sizes[1] : f'    Food: ${round(sizes[1], 2)}',
@@ -93,8 +107,8 @@ class Account(object):
             print(bank[max(bank.keys())])
             del bank[max(bank.keys())]
 
-
-my_account = Account('stuff.CSV')
-my_account.Summary('11/29/2019','12/30/2019')
-my_account.Pie_Chart('11/29/2019','12/30/2019')
+if __name__ == '__main__':
+    my_account = Account('stuff.CSV')
+    my_account.Summary('11/29/2019','12/30/2019')
+    my_account.Pie_Chart('11/29/2019','12/30/2019')
 
